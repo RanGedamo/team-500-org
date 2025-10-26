@@ -1,10 +1,9 @@
-// src/lib/auth.ts
-
 "use server";
 
 import { cookies } from "next/headers";
 import { verifyJWT } from "./jwt";
 import User from "@/models/User";
+import "@/models/UserProfile"; // ✅ הוספה חשובה מאוד
 import { connectToDB } from "./db";
 
 export async function getCurrentUser() {

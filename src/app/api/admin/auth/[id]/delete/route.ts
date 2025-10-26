@@ -1,5 +1,7 @@
 import { connectToDB } from "@/lib/db";
 import User from "@/models/User";
+import "@/models/UserProfile"; // ✅ הוספה חשובה מאוד
+
 import UserProfile from "@/models/UserProfile";
 // import { getCurrentUser } from "@/lib/auth";
 import { NextResponse } from "next/server";

@@ -4,6 +4,8 @@ import { connectToDB } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import AvailabilityForm from "@/models/AvailabilityForm";
 import User from "@/models/User";
+import "@/models/UserProfile"; // ✅ הוספה חשובה מאוד
+
 import Schedule from "@/models/Assignment";
 import Position from "@/models/Position";
 import DefaultPosition from "@/models/DefaultPosition"; // ✅ חדש

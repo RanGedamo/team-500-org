@@ -4,6 +4,7 @@ import { connectToDB } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import AvailabilityForm from "@/models/AvailabilityForm";
 import User from "@/models/User";
+import "@/models/UserProfile"; // ✅ הוספה חשובה מאוד
 
 export async function GET(req: NextRequest) {
   try {

@@ -1,6 +1,7 @@
 // /api/admin/auth/list-guard-names/route.ts
 import { connectToDB } from "@/lib/db";
 import User from "@/models/User";
+import "@/models/UserProfile"; 
 // import UserProfile from "@/models/UserProfile";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";

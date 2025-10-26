@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 import { connectToDB } from "@/lib/db";
 import User from "@/models/User";
+import "@/models/UserProfile"; // ✅ הוספה חשובה מאוד
+
 import UserProfile from "@/models/UserProfile";
 import bcrypt from "bcryptjs";
 import { verifyJWT } from "@/lib/jwt";

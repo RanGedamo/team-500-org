@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { connectToDB } from "@/lib/db";
 import { verifyJWT } from "@/lib/jwt";
 import User from "@/models/User";
+import "@/models/UserProfile"; // ✅ הוספה חשובה מאוד
+
 import UserProfile from "@/models/UserProfile";
 
 export async function PUT(req: NextRequest) {

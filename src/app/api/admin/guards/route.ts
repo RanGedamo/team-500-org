@@ -2,6 +2,7 @@ import {  NextResponse } from "next/server";
 import { connectToDB } from "@/lib/db";
 // import { getCurrentUser } from "@/lib/auth";
 import User from "@/models/User";
+import "@/models/UserProfile"; // ✅ הוספה חשובה מאוד
 
 export async function GET() {
   try {

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/lib/db";
 import User from "@/models/User";
+import "@/models/UserProfile"; 
 import { comparePasswords } from "@/lib/hash";
 import { signJWT } from "@/lib/jwt";
-import UserProfile from "@/models/UserProfile";
 
 export async function POST(req: NextRequest) {
   const { username, password } = await req.json();
@@ -13,20 +13,9 @@ export async function POST(req: NextRequest) {
 
   await connectToDB();
 
-  console.log(123);
-  
-  const testUser = await User.findOne({ username:"123321" });
-  
-  console.log("testUser : " ,testUser);
 
-  console.log(testUser?.profile);
-  
-  const testUserProfile = await testUser?.populate("profile");
 
-  const testUserProfile2 = await UserProfile.findById(testUser?.profile);
 
-  console.log("test by populate:",testUserProfile," test by userprofile: ",testUserProfile2);
-  
   
   const user = await User.findOne({ username }).populate("profile");
   console.log(user);

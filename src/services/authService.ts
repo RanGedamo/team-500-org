@@ -1,6 +1,8 @@
 // src/services/authService.ts
 
 import User from "@/models/User";
+import "@/models/UserProfile"; // ✅ הוספה חשובה מאוד
+
 import UserProfile from "@/models/UserProfile";
 import bcrypt from "bcryptjs";
 
