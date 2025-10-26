@@ -12,7 +12,11 @@ export async function POST(req: NextRequest) {
 
   await connectToDB();
 
+  console.log(123);
+  
+  
   const user = await User.findOne({ username }).populate("profile");
+  console.log(user);
   if (!user) {
     return new NextResponse("שם משתמש או סיסמא לא נכונים", { status: 404 });
   }
