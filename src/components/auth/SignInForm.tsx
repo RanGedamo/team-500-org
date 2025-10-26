@@ -35,6 +35,8 @@ export default function SignInForm() {
     setServerError("");
     try {
       const user = await login(data.username, data.password);
+      console.log("client user: ", user);
+      
       if (user.role === "admin") {
         router.push("/admin/dashboard");
       } else if (user.role === "guard") {
