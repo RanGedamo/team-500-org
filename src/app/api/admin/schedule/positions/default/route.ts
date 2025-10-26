@@ -5,7 +5,6 @@ import DefaultPosition from "@/models/DefaultPosition";
 
 // ✅ שליפת כל עמדות ברירת המחדל
 export async function GET() {
-  await connectToDB();
   const admin = await getCurrentUser();
   if (!admin || admin.role !== "admin") {
     return NextResponse.json(
@@ -22,7 +21,6 @@ export async function GET() {
 
 // ✅ הוספת עמדה דיפולטיבית חדשה
 export async function POST(req: NextRequest) {
-  await connectToDB();
   const admin = await getCurrentUser();
   if (!admin || admin.role !== "admin") {
     return NextResponse.json(
@@ -62,7 +60,6 @@ export async function POST(req: NextRequest) {
 
 // ✅ עריכת שם עמדה דיפולטיבית
 export async function PUT(req: NextRequest) {
-  await connectToDB();
   const admin = await getCurrentUser();
   if (!admin || admin.role !== "admin") {
     return NextResponse.json(
@@ -97,7 +94,6 @@ export async function PUT(req: NextRequest) {
 
 // ✅ מחיקת עמדה דיפולטיבית
 export async function DELETE(req: NextRequest) {
-  await connectToDB();
   const admin = await getCurrentUser();
   if (!admin || admin.role !== "admin") {
     return NextResponse.json(

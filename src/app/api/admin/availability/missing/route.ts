@@ -8,7 +8,6 @@ import "@/models/UserProfile"; // ✅ הוספה חשובה מאוד
 
 export async function GET(req: NextRequest) {
   try {
-    await connectToDB();
 
     const admin = await getCurrentUser();
     if (!admin || admin.role !== "admin") {

@@ -5,7 +5,6 @@ import AvailabilityForm from "@/models/AvailabilityForm";
 
 export async function GET(req: NextRequest) {
   try {
-    await connectToDB();
 
     const admin = await getCurrentUser();
     if (!admin || admin.role !== "admin") {

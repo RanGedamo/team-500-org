@@ -5,7 +5,6 @@ import { getCurrentUser } from "@/lib/auth";
 import dayjs from "dayjs";
 
 export async function POST(req: NextRequest) {
-  await connectToDB();
 
   const admin = await getCurrentUser();
   if (!admin || admin.role !== "admin") {

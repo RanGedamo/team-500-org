@@ -116,6 +116,7 @@ export default function FormAvailable() {
 
     const payload = {
       userId: user._id,
+      week: currentWeek,
       fullName: user.profile.fullName,
       availability: cleanedAvailability,
       otherNotes,

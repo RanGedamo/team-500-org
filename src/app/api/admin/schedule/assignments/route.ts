@@ -7,7 +7,6 @@ import dayjs from "dayjs";
 
 export async function GET(req: NextRequest) {
   try {
-    await connectToDB();
 
     const admin = await getCurrentUser();
     if (!admin || admin.role !== "admin") {
@@ -69,7 +68,6 @@ export async function GET(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  await connectToDB();
 
   const admin = await getCurrentUser();
   if (!admin || admin.role !== "admin") {

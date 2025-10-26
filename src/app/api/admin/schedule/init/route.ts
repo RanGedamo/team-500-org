@@ -1,6 +1,5 @@
 // src/app/api/admin/schedule/init/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDB } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import AvailabilityForm from "@/models/AvailabilityForm";
 import User from "@/models/User";
@@ -12,7 +11,6 @@ import DefaultPosition from "@/models/DefaultPosition"; // ✅ חדש
 
 export async function GET(req: NextRequest) {
   try {
-    await connectToDB();
 
     const admin = await getCurrentUser();
     if (!admin || admin.role !== "admin") {
@@ -76,6 +74,8 @@ export async function GET(req: NextRequest) {
     const submittedUserIds = new Set(
       availabilityForms.map((f) => f.userId.toString()),
     );
+
+
     const missingGuards = (allGuards as Array<{
       _id: any;
       profile?: { fullName?: string };

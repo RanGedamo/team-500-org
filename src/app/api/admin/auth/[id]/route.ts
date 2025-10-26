@@ -12,7 +12,6 @@ export async function PUT(req: NextRequest) {
   const url = new URL(req.url);
   const userId = url.pathname.split("/").at(-1);
 
-  await connectToDB();
   const admin = await getCurrentUser();
 
   if (!admin || admin.role !== "admin") {
@@ -70,7 +69,6 @@ export async function DELETE(req: NextRequest) {
   const userId = url.pathname.split("/").at(-1);
 
   try {
-    await connectToDB();
 
     const admin = await getCurrentUser();
     if (!admin || admin.role !== "admin") {

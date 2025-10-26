@@ -5,7 +5,7 @@ import Assignment from "@/models/Assignment";
 import { getCurrentUser } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
-  await connectToDB();
+  
   const admin = await getCurrentUser();
   if (!admin || admin.role !== "admin") {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  await connectToDB();
+  
   const admin = await getCurrentUser();
   if (!admin || admin.role !== "admin") {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
@@ -67,7 +67,6 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  await connectToDB();
   const admin = await getCurrentUser();
   if (!admin || admin.role !== "admin") {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
@@ -100,7 +99,6 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  await connectToDB();
   const admin = await getCurrentUser();
   if (!admin || admin.role !== "admin") {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });

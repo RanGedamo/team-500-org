@@ -5,7 +5,6 @@ import Assignment from "@/models/Assignment";
 import { getCurrentUser } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
-  await connectToDB();
 
   const admin = await getCurrentUser();
   if (!admin || admin.role !== "admin") {
