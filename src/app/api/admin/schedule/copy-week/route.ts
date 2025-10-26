@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDB } from "@/lib/db";
+// import { connectToDB } from "@/lib/db";
 import Assignment from "@/models/Assignment";
 import { getCurrentUser } from "@/lib/auth";
 import dayjs from "dayjs";

@@ -1,6 +1,6 @@
 // src/app/api/admin/auth/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDB } from "@/lib/db";
+// import { connectToDB } from "@/lib/db";
 import User from "@/models/User";
 import "@/models/UserProfile"; // ✅ הוספה חשובה מאוד
 
