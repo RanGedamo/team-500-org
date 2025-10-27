@@ -1920,7 +1920,7 @@ if (newPositions.length > 0) {
                               },
                             ]}
                             className="w-full"
-                            dropdownWidth="fit"
+                            // dropdownWidth="fit"
                           />
                         </div>
                       </td>
@@ -2256,7 +2256,7 @@ if (newPositions.length > 0) {
                                   },
                                 ]}
                                 className="w-full"
-                                dropdownWidth="fit"
+                                // dropdownWidth="fit"
                               />
                             </div>
                           </td>
