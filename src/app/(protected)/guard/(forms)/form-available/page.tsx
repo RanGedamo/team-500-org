@@ -11,13 +11,18 @@ const defaultPositions = ["600", "700", "90"];
 type Availability = Record<string, string[]>;
 
 // ✅ Helper function to get next Sunday
-function getNextSunday(): string {
+// ✅ Helper function to get target week according to day
+function getTargetWeek(): string {
   const today = dayjs();
-  const dayOfWeek = today.day();
-  const nextSunday = dayOfWeek === 0 ? today : today.add(7 - dayOfWeek, "day");
-  return nextSunday.format("YYYY-MM-DD");
-}
+  const dayOfWeek = today.day(); // 0 = ראשון, 6 = שבת
 
+  // אם היום ראשון–רביעי (0–3) → מגישים לשבוע העוקב
+  // אם היום חמישי–שבת (4–6) → מגישים לשבוע העוקב שאחריו
+  const weeksToAdd = dayOfWeek <= 3 ? 1 : 2;
+
+  const targetSunday = today.startOf("week").add(weeksToAdd, "week").day(0);
+  return targetSunday.format("YYYY-MM-DD");
+}
 export default function FormAvailable() {
   const [availability, setAvailability] = useState<Availability>({});
   const [otherNotes, setOtherNotes] = useState<Record<string, string>>({});
@@ -28,10 +33,9 @@ export default function FormAvailable() {
 
   const { user, isLoading } = useUser();
 
-  // ✅ Calculate next Sunday on mount
-  useEffect(() => {
-    setCurrentWeek(getNextSunday());
-  }, []);
+useEffect(() => {
+  setCurrentWeek(getTargetWeek());
+}, []);
 
   const toggleOption = (day: string, option: string) => {
     setAvailability((prev) => {
@@ -116,7 +120,6 @@ export default function FormAvailable() {
 
     const payload = {
       userId: user._id,
-      week: currentWeek,
       fullName: user.profile.fullName,
       availability: cleanedAvailability,
       otherNotes,

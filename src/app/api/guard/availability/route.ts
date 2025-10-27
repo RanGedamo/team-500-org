@@ -6,12 +6,12 @@ import AvailabilityForm from "@/models/AvailabilityForm";
 import { cookies } from "next/headers";
 import dayjs from "dayjs";
 
-// ✅ Helper function to get next Sunday
-function getNextSunday(): string {
+function getTargetWeek(): string {
   const today = dayjs();
-  const dayOfWeek = today.day();
-  const nextSunday = dayOfWeek === 0 ? today : today.add(7 - dayOfWeek, "day");
-  return nextSunday.format("YYYY-MM-DD");
+  const dayOfWeek = today.day(); // 0=ראשון, 6=שבת
+  const weeksToAdd = dayOfWeek <= 3 ? 1 : 2; // ראשון–רביעי → שבוע העוקב, חמישי–שבת → שבוע העוקב שאחריו
+  const targetSunday = today.startOf("week").add(weeksToAdd, "week").day(0);
+  return targetSunday.format("YYYY-MM-DD");
 }
 
 interface AvailabilityFormData {
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     }
 
     // ✅ Get next week (Sunday)
-    const nextWeek = getNextSunday();
+    const nextWeek = getTargetWeek();
 
 
     // ✅ Update or create form for this specific week
@@ -116,7 +116,7 @@ export async function GET() {
     }
 
     // ✅ Get next week (Sunday)
-    const nextWeek = getNextSunday();
+    const nextWeek = getTargetWeek();
 
     console.log(
       `📖 Fetching availability for user ${payload.id}, week: ${nextWeek}`,
