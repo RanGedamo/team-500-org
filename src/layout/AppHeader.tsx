@@ -12,6 +12,7 @@ const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
 
   const { isMobileOpen,isExpanded,isHovered, toggleSidebar, toggleMobileSidebar } = useSidebar();
+  const menuRef = useRef<HTMLDivElement>(null); // ✅ נוסיף רפרנס לתפריט
 
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
@@ -21,13 +22,28 @@ const AppHeader: React.FC = () => {
     }
   };
 
-  const toggleApplicationMenu = () => {
-    console.log("isApplicationMenuOpen: ",isApplicationMenuOpen);
-    
-    setApplicationMenuOpen(!isApplicationMenuOpen);
+  const toggleApplicationMenu = (e: React.MouseEvent) => {
+    e.stopPropagation(); // ✅ מונע סגירה מיידית בעת לחיצה על הכפתור עצמו
+    setApplicationMenuOpen((prev) => !prev);
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
+    useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setApplicationMenuOpen(false);
+      }
+    }
+
+    if (isApplicationMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isApplicationMenuOpen]);
+  
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
@@ -35,13 +51,10 @@ const AppHeader: React.FC = () => {
         inputRef.current?.focus();
       }
     };
-
     document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
 
   console.log("isExpanded: ",isExpanded,"isHovered: ",isHovered," isMobileOpen: ",isMobileOpen,"isApplicationMenuOpen: ",isApplicationMenuOpen);
   
@@ -50,6 +63,7 @@ const AppHeader: React.FC = () => {
     <header className="sticky top-0 z-99999 flex w-full border-gray-200 bg-white lg:border-b dark:border-gray-800 dark:bg-gray-900 " >
       <div className="flex grow flex-col-reverse lg:flex lg:flex-row items-center justify-between lg:px-6">
         <div
+        ref={menuRef}
           className={`${
             isApplicationMenuOpen ? "flex flex-row-reverse" : "hidden"
           } shadow-theme-md w-full items-center justify-between gap-4 px-5 py-4 lg:flex lg:flex-row-reverse lg:justify-end lg:px-0 lg:shadow-none`}
@@ -71,24 +85,10 @@ const AppHeader: React.FC = () => {
             onClick={toggleApplicationMenu}
             className="z-99999 flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 lg:hidden dark:text-gray-400 dark:hover:bg-gray-800"
           >
-            {/* <span
-          className={`absolute right-0 top-0.5 z-10 h-2 w-2 rounded-full bg-orange-400 ${
-            !notifying ? "hidden" : "flex"
-          }`}
-        >
-          <span className="  w-full h-full bg-orange-400 rounded-full opacity-75 animate-ping"></span>
-        </span> */}
-            <span
-              className={`absolute top-[22px] right-[15px] z-10 h-2 w-2 rounded-full bg-orange-400  flex`}
-            >
+            <span className="absolute top-[22px] right-[15px] z-10 h-2 w-2 rounded-full bg-orange-400 flex">
               <span className="h-full w-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
             </span>
-            <svg
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg height="24" viewBox="0 0 24 24" fill="none">
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -97,7 +97,6 @@ const AppHeader: React.FC = () => {
               />
             </svg>
           </button>
-
           <Link href="/" className="flex gap-2 lg:hidden">
             <h1 className="py-2 text-3xl font-bold text-gray-900 dark:text-white">
               Team -

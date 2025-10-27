@@ -56,16 +56,29 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // ✅ Calculate dropdown position when opening
-  useEffect(() => {
-    if (isOpen && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      setDropdownPosition({
-        top: rect.bottom,
-        left: rect.left,
-        width: rect.width,
-      });
+useEffect(() => {
+  if (isOpen && buttonRef.current) {
+    const rect = buttonRef.current.getBoundingClientRect();
+    const dropdownHeight = 240; // נניח גובה משוער (אפשר גם למדוד דינמית)
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+
+    let top: number;
+    if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
+      // פתח למעלה
+      top = rect.top - dropdownHeight;
+    } else {
+      // פתח למטה כרגיל
+      top = rect.bottom;
     }
-  }, [isOpen]);
+
+    setDropdownPosition({
+      top,
+      left: rect.left,
+      width: rect.width,
+    });
+  }
+}, [isOpen]);
 
   // ✅ FIX: Prevent scrolling when dropdown is open - check hover over dropdown
   useEffect(() => {
@@ -280,7 +293,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
       )}
 
       {/* ✅ Options List with Scroll */}
-      <div ref={scrollRef} className="max-h-40 overflow-y-auto">
+      <div ref={scrollRef} className="max-h-50 overflow-y-auto">
         {/* Render flat options */}
         {filteredOptions.length > 0 &&
           filteredOptions.map((option) => (

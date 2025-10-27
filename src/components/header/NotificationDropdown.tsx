@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
-// import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { useUser } from "@/context/UserContext";
 
 export default function NotificationDropdown() {
@@ -11,21 +10,44 @@ export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifying, setNotifying] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
+  const [position, setPosition] = useState<"left" | "right" | "center">("right"); // ✅ חדש
 
-  function toggleDropdown() {
-    setIsOpen(!isOpen);
-  }
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  function closeDropdown() {
-    setIsOpen(false);
-  }
-
-  const handleClick = () => {
-    toggleDropdown();
+  const toggleDropdown = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setIsOpen((prev) => !prev);
     setNotifying(false);
   };
 
-  // === שלב קריטי: בדיקה אם יש בקשות חילוף חדשות ===
+  const closeDropdown = () => setIsOpen(false);
+
+  // ✅ החלטה חכמה לאיזה כיוון לפתוח
+  useEffect(() => {
+    if (!isOpen || !buttonRef.current) return;
+
+    const rect = buttonRef.current.getBoundingClientRect();
+    const windowWidth = window.innerWidth;
+
+    if (rect.left < 150) setPosition("left");
+    else if (windowWidth - rect.right < 150) setPosition("right");
+    else setPosition("center");
+  }, [isOpen]);
+
+  // ✅ סגירה מחוץ לתפריט
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen]);
+
+  // ✅ שליפת התראות
   useEffect(() => {
     if (!user?.profile?.userId) return;
 
@@ -46,31 +68,21 @@ export default function NotificationDropdown() {
       }
     };
 
-    // בדיקה ראשונית
     fetchNotifications();
-
-    // ריענון כל 30 שניות (אפשר להוריד ל־10 אם רוצים רענון קרוב לריל־טיים)
-    // const interval = setInterval(fetchNotifications, 30000);
-
-    // return () => clearInterval(interval);
   }, [user?.profile?.userId]);
 
-  // === UI ===
   return (
-    <div className="relative">
-      <div>
-
-      
+    <div ref={dropdownRef} className="relative">
       <button
+        ref={buttonRef}
         className="dropdown-toggle flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:text-gray-700 h-11 w-11 hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
-        onClick={handleClick}
+        onClick={toggleDropdown}
       >
         {notifying && (
           <span className="absolute right-0 top-0.5 z-10 h-2 w-2 rounded-full bg-orange-400">
             <span className="w-full h-full bg-orange-400 rounded-full opacity-75 animate-ping"></span>
           </span>
         )}
-
         <svg
           className="fill-current"
           width="20"
@@ -90,12 +102,11 @@ export default function NotificationDropdown() {
       <Dropdown
         isOpen={isOpen}
         onClose={closeDropdown}
-        className="inline-flex fixed mt-[17px] h-72 w-80 flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark sm:w-[361px]"
+        position={position} // ✅ נפתח לפי המסך
+        className="mt-[17px] h-72 w-80 flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark sm:w-[361px]"
       >
         <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-100 dark:border-gray-700">
-          <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-            התראות
-          </h5>
+          <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">התראות</h5>
         </div>
 
         {notifications.length === 0 ? (
@@ -122,8 +133,6 @@ export default function NotificationDropdown() {
           כל הבקשות
         </Link>
       </Dropdown>
- 
- </div>
     </div>
   );
 }

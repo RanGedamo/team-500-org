@@ -349,6 +349,9 @@ const checkConflict = useCallback(
   [userAssignmentsByDate, tasksByDate],
 );
 
+useEffect(() => {
+  setGuardAvailabilityCache(new Map());
+}, [availabilityForms, startDate, selectedPosition]);
 
   useEffect(() => {
     if (
@@ -627,7 +630,6 @@ const checkConflict = useCallback(
 
       if (loadedWeeks.has(cacheKey)) {
         console.log("✅ Using cached data for week:", startDate);
-        return;
       }
 
       setIsLoading(true);
@@ -674,9 +676,13 @@ const checkConflict = useCallback(
         setGuards(uniqueGuards);
 
         // ✅ קבע selectedPosition רק אם עדיין אין
-        if (!selectedPosition && newPositions.length > 0) {
-          setSelectedPosition(newPositions[0].name);
-        }
+if (newPositions.length > 0) {
+  // אם העמדה הנוכחית לא קיימת בעמדות החדשות – עבור לראשונה
+  const exists = newPositions.some((p: Position) => p.name === selectedPosition);
+  if (!exists) {
+    setSelectedPosition(newPositions[0].name);
+  }
+  }
 
         // ✅ בנה assignmentsByPos עם positions החדשים
         const assignmentsByPos: Record<string, Assignments> = {};
@@ -1661,6 +1667,7 @@ const checkConflict = useCallback(
                             ))}
 
                           <CustomSelect
+                          searchable
                             value=""
                             placeholder="+ הוסף מאבטח"
                             onChange={(selectedFullName, userId) => {
@@ -2620,7 +2627,7 @@ const checkConflict = useCallback(
   }, [showAvailabilityPanel, availabilityForms, selectedPosition, positions]);
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full ">
       <h1 className="mb-4 text-center text-2xl font-bold">סידור עבודה שבועי</h1>
 
       {positions.length > 0 && selectedPosition && (
